@@ -48,6 +48,7 @@ $(function() {
     });
 
     // All requests are asynchonous so this won't work
+    // Delegate applies to any future elements and current ones
     // $('.remove').on('click', function() {
     // Go to parent 
     $orders.delegate('.remove', 'click', function() {
@@ -67,5 +68,41 @@ $(function() {
                 });
             }
         });
+    });
+
+    $orders.delegate('.editOrder', 'click', function() {
+        var $li = $(this).closest('li');
+        $li.find('input.name').val($li.find('span.name').html()); // Setting input to same as span
+        $li.find('input.drink').val($li.find('span.drink').html()); // Setting input to same as span
+        $li.addClass('edit');
+    });
+
+    $orders.delegate('.cancelEdit', 'click', function() {
+        $(this).closest('li').removeClass('edit');
+    });
+
+    $orders.delegate('.saveEdit', 'click', function() {
+        var $li = $(this).closest('li');
+        var order = {
+            name: $li.find('input.name').val(),
+            drink: $li.find('input.drink').val()
+        };
+        $.ajax({
+            type: 'PUT',
+            url: '/api/orders.php/' + $li.attr('data-id'),
+            data: {
+                name: $li.find('input.name').val(),
+                drink: $li.find('input.drink').val()
+            },
+            success: function(newOrder) {
+                $li.find('span.name').html(order.name);
+                $li.find('span.drink').html(order.drink);
+                $li.removeClass('edit');
+            },
+            error: function() {
+                alert('error updating order');
+            }
+        });  
+
     });
 });

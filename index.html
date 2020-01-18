@@ -10,16 +10,16 @@
 
         <ul id="orders"></ul>
         <template id="order-template">
-            <li> 
+            <li data-id="{{id}}"> 
                 <p>
                     <strong>Name:</strong> 
-                    <span class="noedit">{{name}}</span>
+                    <span class="noedit name">{{name}}</span>
                     <input class="edit name"/>
                 </p> 
                 <p>
                     <strong>Drink:</strong> 
-                    <span class="noedit">{{drink}}</spanclass="noedit">
-                    <input class="edit name"/>
+                    <span class="noedit drink">{{drink}}</span>
+                    <input class="edit drink"/>
                 </p> 
                 <button data-id='{{id}}' class='remove'>X</button>
                 <button class="editOrder noedit">Edit</button> 

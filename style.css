@@ -18,10 +18,12 @@ ul li {
     margin-bottom: 10px;
 }
 
+/* Any edit within li and ul */
 ul li .edit {
     display:none;
 }
 
+/* Any edit in edit mode */
 ul li.edit .edit {
     display: initial;
 }
