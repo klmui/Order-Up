@@ -3,6 +3,16 @@ $(function() {
     var $name = $('#name');
     var $drink = $('#drink');
 
+    var orderTemplate = "" +
+    "<li>" +
+    "<p><strong>Name:</strong> {{name}}</p>" +
+    "<p><strong>Drink:</strong> {{drink}}</p>" +
+    "<button data-id='{{id}}' class='remove'>X</button>" +
+    "</li>"; // Made using mustache view engine
+    function addOrder(order) {
+        $orders.append(Mustache.render(orderTemplate, order));
+    }
+
     $.ajax({
         type: 'GET',
         url: '/api/orders.php', 
@@ -12,10 +22,11 @@ $(function() {
             console.log(orders);
             // args: i is index, order is the order
             $.each(orders, function(i, order){
-                $orders.append('<li>name: ' + order.name +', drink: ' + order.drink + ' </li>');
+                addOrder(order);
             });
         },
-        error: function() {
+        error: function(method) {
+            console.log(method);
             alert('error loading orders');
         }
     });
@@ -32,10 +43,32 @@ $(function() {
             success: function(newOrder) {
                 console.log(newOrder);
                 jsonParsed = JSON.parse(newOrder);
-                $orders.append('<li>name: ' + jsonParsed.name + ', drink: ' + jsonParsed.drink + ' </li>');
+                addOrder(jsonParsed);
             },
             error: function() {
                 alert('error saving order');
+            }
+        });  
+    });
+
+    // All requests are asynchonous so this won't work
+    // $('.remove').on('click', function() {
+    // Go to parent 
+    $orders.delegate('.remove', 'click', function() {
+
+        // li of the order
+        $li = $(this).closest('li'); // Goes up the chain until it finds an li
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/orders.php/' + $(this).attr('data-id'), // How to get the data-id?
+            success: function(id) {
+                console.log(id);
+
+                // Remove li without refreshing page
+                $li.fadeOut(300, function() {
+                    $(this).remove();
+                });
             }
         });
     });

@@ -1,16 +1,41 @@
 <?php
+    $method = $_SERVER['REQUEST_METHOD'];
+    
+    if ($method == 'GET') {
+        // Handle GET request
+        if ($_GET['load']) { // If I set load to false, this won't execute
+            $jsonData = file_get_contents('../orders.json');
+            echo $jsonData;
+         } 
+    }
 
+    if ($method == 'POST') {
+        // Handle POST request
+        if (($_POST['name']) && ($_POST['drink'])) {
+            $order = array('name' => $_POST['name'], 'drink' => $_POST['drink']);
+            echo json_encode(createNewOrder($order));
+        }
+    }
 
-    // Handle GET request
-    if ($_GET['load']) { // If I set load to false, this won't execute
-        $jsonData = file_get_contents('../orders.json');
-        echo $jsonData;
-    } 
-
-    // Handle POST request
-    if (isset($_POST['name']) && isset($_POST['drink'])) {
-        $order = array('name' => $_POST['name'], 'drink' => $_POST['drink']);
-        echo json_encode(createNewOrder($order));
+    if ($method == 'DELETE') {
+        $id = explode("/", $_SERVER['PHP_SELF'])[3];
+        $data = file_get_contents('../orders.json');
+        // decode json to associative array
+        $json_arr = json_decode($data, true);
+        // get array index to delete
+        $arr_index = array();
+        foreach ($json_arr as $key => $value) {
+            if ($value['id'] == $id) {
+                $arr_index = $key;
+            }
+        }
+        // delete data
+        unset($json_arr[$arr_index]);
+        // rebase array
+        $json_arr = array_values($json_arr);
+        // encode array to json and save to file
+        file_put_contents('../orders.json', json_encode($json_arr, JSON_PRETTY_PRINT));
+        echo $id;
     }
 
     // Add order to JSON file
