@@ -2,16 +2,31 @@
 <html> 
     <head>
         <meta charset="utf-8">
-        <title>jQuery Ajax Tutorial</title>
-        <link rel="stylesheet" href="">
+        <title>Coffee Orders</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>jQuery Ajax Tutorial</h1>
+        <h1>Coffee Orders</h1>
 
-        <h2>Coffee Orders</h2>
-        <ul id="orders">
-           
-        </ul>
+        <ul id="orders"></ul>
+        <template id="order-template">
+            <li> 
+                <p>
+                    <strong>Name:</strong> 
+                    <span class="noedit">{{name}}</span>
+                    <input class="edit name"/>
+                </p> 
+                <p>
+                    <strong>Drink:</strong> 
+                    <span class="noedit">{{drink}}</spanclass="noedit">
+                    <input class="edit name"/>
+                </p> 
+                <button data-id='{{id}}' class='remove'>X</button>
+                <button class="editOrder noedit">Edit</button> 
+                <button class="saveEdit edit">Save</button> 
+                <button class="cancelEdit edit">Cancel</button> 
+            </li>
+        </template>
 
         <h4>Add a Coffee Order</h4>
         <p>Name: <input type="text" id="name"></p>
